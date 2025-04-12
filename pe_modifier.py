@@ -25,3 +25,4 @@ def set_timestamp(binary_path, new_timestamp):
         timestamp_offset = pe_info['PEOffset'] + 8
         f.seek(timestamp_offset)
         f.write(struct.pack('<I', new_timestamp))
+

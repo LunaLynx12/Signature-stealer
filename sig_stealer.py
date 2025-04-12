@@ -54,3 +54,5 @@ def inject_certificate(target_binary, cert_data):
         f.seek(cert_table_offset)
         f.write(struct.pack('<I', cert_offset))  # CertRVA
         f.write(struct.pack('<I', len(cert_data)))  # CertSize
+
+        
