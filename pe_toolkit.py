@@ -3,7 +3,7 @@ import argparse
 import sys
 from pe_analyzer import gather_file_info
 from pe_modifier import zero_certificate_table, set_timestamp
-from sig_stealer import extract_certificate, inject_certificate
+from sig_stealer import extract_certificate_only, extract_complete_signature, inject_certificate
 from payload_injector import inject_payload
 
 def main():
@@ -15,8 +15,10 @@ def main():
     
     # Signature manipulation
     parser.add_argument("--zero-cert", action="store_true", help="Zero out certificate table")
-    parser.add_argument("--extract-cert", help="Extract certificate to file")
+    parser.add_argument("--extract-cert", help="Extract certificate to file (certificate only)")
+    parser.add_argument("--extract-sig", help="Extract complete signature to file (including headers)")
     parser.add_argument("--inject-cert", help="Inject certificate from file")
+    parser.add_argument("--inject-sig", help="Inject complete signature from file")
     
     # Payload injection
     parser.add_argument("--inject-payload", help="Inject binary payload from file")
@@ -42,7 +44,7 @@ def main():
             print("\n[+] Zeroed out certificate table")
         
         if args.extract_cert:
-            cert_data = extract_certificate(args.input)
+            cert_data = extract_certificate_only(args.input)
             if cert_data:
                 with open(args.extract_cert, 'wb') as f:
                     f.write(cert_data)
@@ -50,11 +52,27 @@ def main():
             else:
                 print("\n[-] No certificate found in input file")
         
+        if args.extract_sig:
+            sig_data = extract_complete_signature(args.input)
+            if sig_data:
+                with open(args.extract_sig, 'wb') as f:
+                    f.write(sig_data)
+                print(f"\n[+] Extracted complete signature to {args.extract_sig}")
+            else:
+                print("\n[-] No signature found in input file")
+        
         if args.inject_cert:
             with open(args.inject_cert, 'rb') as f:
                 cert_data = f.read()
             inject_certificate(args.input, cert_data)
             print(f"\n[+] Injected certificate from {args.inject_cert}")
+        
+        if args.inject_sig:
+            with open(args.inject_sig, 'rb') as f:
+                sig_data = f.read()
+            inject_certificate(args.input, sig_data)
+            print(f"\n[+] Injected complete signature from {args.inject_sig}")
+            print("[!] Warning: Signature mismatch may trigger AV detection!")
         
         # Payload injection
         if args.inject_payload:
