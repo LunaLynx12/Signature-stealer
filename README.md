@@ -13,7 +13,7 @@ A Python-based toolkit for analyzing and modifying Portable Executable (PE) file
 
 - **Signature Manipulation**:
   - Extract certificates (`cert.bin`)
-  - Extract complete signatures (`sing.bin`)
+  - Extract complete signatures (`sign.bin`)
   - Inject certificates/signatures
   - Zero out certificate tables
 
