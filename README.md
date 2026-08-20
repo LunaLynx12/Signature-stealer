@@ -1,4 +1,4 @@
-# Signature-stealer Toolkit
+# Signature-stealer Toolkit by Petre Radu Cătălin
 
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue)
 
